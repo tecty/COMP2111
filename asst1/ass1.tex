@@ -62,7 +62,7 @@ the number of letters in the string. Formally, we define these two nothion induc
       0 & \text{if }\ell= '\backslash0'
     \end{cases}\\
 \end{gather*}
-Also, by the convention of C we has this defination for $S \in string$.
+Also, by the convention of C we has this definition for $S \in string$.
 \begin{gather*}
     S[\length{S}] = '\backslash0' \And \All{0 \leq i < \length{S}}{S[i]\neq '\backslash0'}
 \end{gather*}
@@ -88,7 +88,7 @@ instead of a long programme of our toy language:
     i\Ass 0;\\
     \assn{I}\\
     \WHILE~i\leq\length{b}~\DO\\
-        \qquad \assn{I \And i<n}\\
+        \qquad \assn{I \And i\leq \length{b}}\\
         \qquad \assn{I \subst{i+1}i \subst{a:i\mapsto b[i]}{a}}\\
         \qquad a[i] \Ass b[i];\\
         \qquad \assn{I \subst{i+1}i}\\
@@ -102,7 +102,7 @@ instead of a long programme of our toy language:
 \end{gather*}
 when our invariant is 
 \begin{gather*}
-    I = a,b\in String \And 0 \leq i < (\length{b}+1) \And \All{k \in 0..(i-1)}{ a[k] = b[k]}  
+    I = a,b\in String \And 0 \leq i \leq (\length{b}+1) \And \All{k \in 0..(i-1)}{ a[k] = b[k]}  
 \end{gather*}
 Here are the proofs of the implications:
 
@@ -117,30 +117,93 @@ Here are the proofs of the implications:
 \begin{align*}
     & a, b \in String  \\
     % 
-    \justification{Defination of String }
-    & sss\\
-    \justification{def}
+    \justification[\Implies]{using $\length{b}\in\nat$ and realising that the last conjunct is vacuously true}
+    & a,b\in String \And 0 \leq 0 \leq (\length{b}+1)\And \All{k \in 0..(0-1)}{ a[k] = b[k]} \\
+    \justification{definition of I and substitution}
     & I\subst{0}{i}
 \end{align*}
 
 \subsubsection*{
     Second Implication
-    $I \And i<n \Implies I \subst{i+1}i \subst{a:i\mapsto b[i]}{a} $
+    $I \And i\leq\length{b} \Implies I \subst{i+1}i \subst{a:i\mapsto b[i]}{a} $
 }
+
+%Here may need some modification
+%
+We first look at the LHS:
+\begin{align*}
+    & I \And i \leq \length{b}\\
+    \justification{Substitue I }
+    & a,b\in String \And 0 \leq i \leq (\length{b}+1) \And \All{k \in 0..(i-1)}{ a[k] = b[k]} \And i \leq \length{b}\\
+    \justification{Conjunct $i\leq (\length{b}+1) $ and $i\leq \length{b}$}
+    &a,b\in String \And 0 \leq i \leq \length{b} \And \All{k \in 0..(i-1)}{ a[k] = b[k]} 
+\end{align*}
+We then expand RHS:
+\begin{align*}
+    & I \subst{i+1}i \subst{a:i\mapsto b[i]}{a}\\
+    \justification{substitute $i = i+1$ and $a[i]= b[i]$ by definition}
+    & a,b\in String \And 0 \leq i+1 \leq (\length{b}+1) \And \All{k \in 0..((i+1)-1)}{ a[k] = b[k]} \And a[i] \Ass b[i] 
+\end{align*}
+We then have a clear imply
+\begin{align*}
+    & a,b\in String \And 0 \leq i \leq \length{b} \And \All{k \in 0..(i-1)}{ a[k] = b[k]}\\
+    \justification[\Implies]{$i \leq \length{b} \Implies i+1\leq \length{b}+1$ and $ a[i] \Ass b[i]$  }
+    & a,b\in String \And 0 \leq i+1 \leq (\length{b}+1) \And \All{k \in 0..((i+1)-1)}{ a[k] = b[k]} \And a[i] \Ass b[i] 
+\end{align*}
 
 
 % Third implication should change
 
 \subsubsection*{
     Third Implication
-    $I\And i\geq0 \Implies a=b $
+    $I\And i>\length{b} \Implies a,b \in String\And a=b  $
 }
+\begin{align*}
+    &I\And i>\length{b}\\
+    \justification{substitution of I }
+    &a,b\in String \And 0 \leq i \leq (\length{b}+1) \And \All{k \in 0..(i-1)}{ a[k] \Ass b[k]} \And i > \length{b} \\
+    \justification{ $i>\length{b}$and $i \leq (\length{b}+1)$ with some calculation}
+    & a,b\in String \And \All{k \in 0..\length{b}}{ a[k] \Ass b[k]}\\
+    \justification[\Implies]{Definition of two string equal}
+    & a,b \in String \And a = b
+\end{align*}
 
 % a programe to write whether the string is equal to another string.
-\subsection{String Compare}
+\subsection*{String Compare}
+Missing part
 
 
 \section{Task 1}
+Since we have define some manipulation of String, we can see a 
+string as a whole. So the input is an array of String. Hence we can define 
+our precondiction as:
+\begin{gather*}
+    a\in String^*\And\length{a} = n
+\end{gather*}
+As the post condition as:
+\begin{gather*}
+    a,b \in String^* \And \length{b} \leq \length{a} \And \All{i\in 1..(\length{a}-1), a[i]\neq a[i+1],a[i-1] \neq a[i]\\}
+    {\Exi{j \in 1..(\length{b}-1)}{a[i-1]= b[j-1], a[i]= b[j], a[i+1]= b[j+1], i\geq j}}\\
+    \And \All {j \in 1..length(b)}{b[j]\neq b[j-1] \And b[j-1]\neq b[j+1]}
+\end{gather*}
+The postcondition mainly say all the adjust line is not the same string in array a , then 
+the b array will contain those identical adjust three line and all the adjust line in the array b is not equal.
+Hence the post condition is not
+friendly there is a refinement for this postcondition that would be use in programme this uniq.\\
+\subsection{Refinement of the postcondition }
+By having this observation( proof)
+\begin{align*}
+    &b \in String^* \And j \in 0..(\length{b}-1) \All b[j] \neq b[j+1] \\
+    \justification{sss}
+\end{align*}
+we can refine the post condition to this easier one. 
+\begin{align*}
+    &LOL
+\end{align*}
+
+\section{Task 2}
+\section{Task 3}
+\section{Task 4}
 
 
 
