@@ -1,0 +1,147 @@
+\documentclass[a4paper,12pt,fleqn]{scrartcl}
+\usepackage[l2tabu,orthodox]{nag}% Old habits die hard. All the same, there are commands, classes and packages which are outdated and superseded. nag provides routines to warn the user about the use of those.
+
+\usepackage[all,error]{onlyamsmath}% Error on deprecated math commands like $$ $$.
+\usepackage[strict=true]{csquotes}
+
+%\usepackage{color}
+
+\usepackage{listings}
+\lstset{frame=single,framerule=0pt,language={C},showstringspaces=false,numbers=left,columns=fullflexible}
+
+% COMP2111-specific macros. See
+% http://www.cse.unsw.edu.au/~cs2111/18s1/LaTeX/primer.html
+\usepackage{2111defs2}
+\usepackage[colorlinks=true]{hyperref}
+
+\newcommand{\assn}[1]{{\color{red}\left\{#1\right\}}}
+\newcommand{\remark}[1]{{\sffamily\color{blue}{#1}}}
+
+% define some convenience macros specific to this task
+\newcommand{\perm}{\mathsf{perm}}
+%title variable
+\title{Assignment 1}
+\author{z5141448\and Ruofei HUANG}
+
+
+\newcommand{\variant}[3]{(#1:#2\mapsto #3)}
+\newcommand{\oldwhatever}[4]{\variant{#1}{#2}{\variant{#1[#2]}{#3}{#4}}}
+\newcommand{\whatever}[4]{\variant{#1}{#2\mapsto #3}{#4}}
+\newcommand{\ah}{\mathsf{a}}
+\newcommand{\be}{\mathsf{b}}
+\newcommand{\length}[1]{\left|#1\right|}
+\newcommand{\noof}[2]{\left\|#1\right\|_{#2}}
+\def\L{\mathcal{L}}
+\begin{document}
+\maketitle
+
+\section*{Definations}
+\subsection*{Two Dimensional Arrays Expression}
+To describe variants of two-dimensional arrays we write
+$\whatever bkjx$ instead of $\oldwhatever bkjx$. We use this new
+notation to state an instance of the array-assignment axiom we saw
+already
+\begin{gather*}
+    \Htri{\phi\subst{\variant bkx}b}{b[k] \Ass x}{\phi}
+\end{gather*}
+for two-dimensional arrays:
+\begin{gather*}
+    \Htri{\phi\subst{\whatever{b}{k}{j}{x}}{b}}{b[k][j] \Ass x}{\phi}
+\end{gather*}
+
+\subsection*{String Length}
+A string $S \in Letter^*$ which is an array of letters\footnote{The letter here is
+a legal charater encode with ASCII, UTF-8 or other charater encoding
+standard. }.Also, string will be terminate by the null character which is a convention by the C
+programming language and we will follow this convention in this proof. We write $\length{S}$ for 
+the number of letters in the string. Formally, we define these two nothion inductively by
+\begin{gather*}
+    \length{S\ell} =\length S+
+    \begin{cases}
+      1 & \text{if }\ell\neq '\backslash0'\\
+      0 & \text{if }\ell= '\backslash0'
+    \end{cases}\\
+\end{gather*}
+Also, by the convention of C we has this defination for $S \in string$.
+\begin{gather*}
+    S[\length{S}] = '\backslash0' \And \All{0 \leq i < \length{S}}{S[i]\neq '\backslash0'}
+\end{gather*}
+
+\subsection*{String Equals}
+To describe two string $a,b$ ($a,b \in String $) are equals we write $a=b$ when:
+\begin{gather*}
+    a = b \iff\length{a} = \length{b} \And \All{j\in 0..\length{a}}{a[j]  = b[j]}
+\end{gather*}
+Similarly, we write:
+\begin{gather*}
+    a \neq b \iff \neg (a = b) 
+\end{gather*}
+\subsection*{String Assign}
+To assign a string to another string array, we will denote as 
+\begin{gather*}
+    a := b 
+\end{gather*}
+instead of a long programme of our toy language:
+\begin{gather*}
+    \assn{a,b\in String}\\
+    \assn{I \subst{0}{i} }\\
+    i\Ass 0;\\
+    \assn{I}\\
+    \WHILE~i\leq\length{b}~\DO\\
+        \qquad \assn{I \And i<n}\\
+        \qquad \assn{I \subst{i+1}i \subst{a:i\mapsto b[i]}{a}}\\
+        \qquad a[i] \Ass b[i];\\
+        \qquad \assn{I \subst{i+1}i}\\
+        \qquad i \Ass i +1;\\
+        \qquad \assn{I}\\
+    \OD;\\
+    \assn{I\And i>\length{b}}\\
+    % \assn{I\subst{a:\length{b}\mapsto '\backslash0' }{a} }\\
+    % a[\length{b}] = '\backslash0';\\
+    \assn{a,b \in String\And a=b }
+\end{gather*}
+when our invariant is 
+\begin{gather*}
+    I = a,b\in String \And 0 \leq i < (\length{b}+1) \And \All{k \in 0..(i-1)}{ a[k] = b[k]}  
+\end{gather*}
+Here are the proofs of the implications:
+
+% 
+%  Sessions for proofing *strcpy 
+% 
+
+\subsubsection*{
+    First Implication for String assign:  
+    $a,b\in String\Implies I\subst{0}{i}$
+}
+\begin{align*}
+    & a, b \in String  \\
+    % 
+    \justification{Defination of String }
+    & sss\\
+    \justification{def}
+    & I\subst{0}{i}
+\end{align*}
+
+\subsubsection*{
+    Second Implication
+    $I \And i<n \Implies I \subst{i+1}i \subst{a:i\mapsto b[i]}{a} $
+}
+
+
+% Third implication should change
+
+\subsubsection*{
+    Third Implication
+    $I\And i\geq0 \Implies a=b $
+}
+
+% a programe to write whether the string is equal to another string.
+\subsection{String Compare}
+
+
+\section{Task 1}
+
+
+
+\end{document}

@@ -1,0 +1,194 @@
+\documentclass[a4paper,12pt,fleqn]{scrartcl}
+  \usepackage[l2tabu,orthodox]{nag}% Old habits die hard. All the same, there are commands, classes and packages which are outdated and superseded. nag provides routines to warn the user about the use of those.
+  
+  \usepackage[all,error]{onlyamsmath}% Error on deprecated math commands like $$ $$.
+  \usepackage[strict=true]{csquotes}
+  
+  %\usepackage{color}
+  
+  \usepackage{listings}
+  \lstset{frame=single,framerule=0pt,language={C},showstringspaces=false,numbers=left,columns=fullflexible}
+  
+  % COMP2111-specific macros. See
+  % http://www.cse.unsw.edu.au/~cs2111/18s1/LaTeX/primer.html
+  \usepackage{2111defs2}
+  \usepackage[colorlinks=true]{hyperref}
+  
+  \newcommand{\assn}[1]{{\color{red}\left\{#1\right\}}}
+  \newcommand{\remark}[1]{{\sffamily\color{blue}{#1}}}
+  
+  % define some convenience macros specific to this task
+  \newcommand{\perm}{\mathsf{perm}}
+  
+  \title{Assignment 1}
+  % name OR student number for each of the two
+  \author{z1234567\and Jack Shit}
+  
+  \begin{document}
+  \maketitle
+  
+  \remark{I've sprinkled a few explanatory remarks in here, typeset like
+    this one. You wouldn't do that to Liam. Instead you'd fill in all
+    the gaps.}
+  
+  \section{Task 1}
+  \label{sec:task-1}
+  Having defined that array $a$ of length $n$ contains a permutation (as
+  described in the assignment 1 (16s1) specification) by
+  \begin{gather*}
+    \perm(a,n) = \All{k\in 0..(n-1)}{\Exi{\ell\in 0..(n-1)}{a[\ell]=k}}
+  \end{gather*}
+  we define our precondition
+  \begin{gather*}
+    \perm(a,n)\And a=a_0
+  \end{gather*}
+  so that it states that $a$ contains a permutation. We also freeze
+  $a$'s initial value for later reference in the postcondition
+  \begin{gather*}
+    \All{k\in0..(n-1)}{b[a_0[k]]=k}
+  \end{gather*}
+  which states that $a$ is the inverse of its original value upon
+  termination of our program.
+  
+  %\remark{Could say more here about why this captures the requirements.}
+  \section{Task 2}
+  \label{sec:task-2}
+  
+  We propose the following proof outline to demonstrate the correctness
+  of our code (in black).
+  \begin{gather*}
+     \assn{\perm(a,n)\And a=a_0}\\
+     \assn{I\subst 0i}\\
+     i\Ass 0;\\
+     \assn{I}\\
+     \WHILE~i<n~\DO\\
+     \qquad \assn{I\And i<n}\\
+     \qquad \assn{I\subst{i+1}i\subst{(b:a[i]\mapsto i)}b}\\
+     \qquad b[a[i]]\Ass i;\\
+     \qquad \assn{I\subst{i+1}i}\\
+     \qquad i\Ass i+1\\
+     \qquad \assn{I}\\
+     \OD;\\
+     \assn{I\And i\geq n}\\
+     \assn{J\subst 0i}\\
+     i\Ass 0;\\
+     \assn{J}\\
+     \WHILE~i<n~\DO\\
+     \qquad \assn{J\And i<n}\\
+     \qquad \assn{J\subst{i+1}i\subst{(a:i\mapsto b[i])}a}\\
+     \qquad a[i]\Ass b[i];\\
+     \qquad \assn{J\subst{i+1}i}\\
+     \qquad i\Ass i+1\\
+     \qquad \assn{J}\\
+     \OD;\\
+     \assn{J\And i\geq n}\\
+     \assn{\All{k\in 0..(n-1)}{a[a_0[k]]=k}}
+  \end{gather*}
+  where our invariants are
+  \begin{align*}
+    I &= \perm(a_0,n)\And 0\leq i \leq n \And a = a_0\And \All{k\in 0..(i-1)}{b[a_0[k]]=k}\\
+    J &= I\subst{a_0,n}{a,i}\And 0\leq i \leq n\And \All{k\in 0..(i-1)}{a[k]=b[k]}
+  \end{align*}
+  \remark{Apart from the pre- and postcondition, all assertion as they occur in
+  the code were derived using the Hoare logic rules for the enclosed
+  constructs. Finding the two invariants is the only marginally creative
+  activity here.} The only remaining proof obligations are the five
+  implications between adjacent assertions.
+  
+  \subsection{First implication: $\perm(a,n)\And a=a_0\Implies I\subst 0i$}
+  
+  \remark{We \emph{find} this proof by beginning with the right-hand-side
+    (RHS) of the implication, unfolding the definition of $I$, and performing the
+    substitution. We \emph{present} it however in the conventional
+    order, namely, from left to right.}
+  \begin{align*}
+    &\perm(a,n)\And a=a_0\\
+    %
+    \justification[\Implies]{using $n\in\nat$ and realising that the last conjunct is vacuously true}
+    % 
+    &\perm(a_0,n)\And 0\leq 0 \leq n \And a = a_0\And \All{k\in 0..(0-1)}{b[a_0[k]]=k}\\
+    %
+    \justification{definitions of $I$ and substitution}
+    %
+    &I\subst 0i
+  \end{align*}
+  
+  \subsection{Second implication: $I\And i<n \Implies I\subst{i+1}i\subst{(b:a_0[i]\mapsto i)}b$}
+  
+  First we expand $I$ and perform the substitutions to arrive at
+  \begin{align*}
+    &\perm(a_0,n)\And 0\leq i \leq n \And a = a_0\And
+      \All{k\in 0..(i-1)}{b[a_0[k]]=k}\And i<n\\
+    {}\Implies{}&
+      \perm(a_0,n)\And 0\leq (i+1) \leq n \And a = a_0\And {}\\
+    & \All{k\in 0..((i+1)-1)}{(b:a_0[i]\mapsto i)[a_0[k]]=k}
+  \end{align*}
+  We discharge the conjuncts on the RHS separately. The first
+  ($\perm(a_0,n)$) and third ($a=a_0$) are both present as conjuncts on
+  the LHS. The second ($0\leq (i+1) \leq n$) follows from
+  $0\leq i \leq n$ and $i<n$ on the LHS because (by an assumption left
+  implicit) $i$ and $n$ are natural numbers. The fourth warrants a more
+  careful proof. We simplify it as follows.
+  \begin{align*}
+    &\All{k\in 0..((i+1)-1)}{(b:a_0[i]\mapsto i)[a_0[k]]=k}\\
+    %
+    \justification{extracting $i$ from the set over which $k$ ranges %in the quantification
+    to deal with it separately}
+    %
+    & \All{k\in 0..(i-1)}{(b:a_0[i]\mapsto i)[a_0[k]]=k}\And (b:a_0[i]\mapsto i)[a_0[i]]=i\\
+    \intertext{The first of these two conjuncts can be simplified by observing that $(b:a_0[i]\mapsto i)[\ell] = b[\ell]$ unless $\ell=a_0[i]$ and that this is never the case for any of the $a_0[k]$ with $0\leq k < i$ because $a_0$ is a permutation. The second can be simplified using $(f:x\mapsto y)(x) = y$.}
+    &\Equiv \All{k\in 0..(i-1)}{b[a_0[k]]=k}\And i=i
+  \end{align*}
+  The first conjunct is present on the LHS while the second is trivially
+  true.
+  
+  \subsection{Third implication: $I\And i\geq n\Implies J\subst 0i$}
+  
+  \begin{align*}
+    & I\And i\geq n\\
+    \justification{Def.~of $I$}
+    & \perm(a_0,n)\And 0\leq i \leq n \And a = a_0\And \All{k\in 0..(i-1)}{b[a_0[k]]=k}\And i\geq n\\
+    \intertext{\remark{stuff missing here}}
+    % ...
+    & I\subst{a_0,n}{a,i}\And 0\leq 0 \leq n\And \All{k\in 0..(0-1)}{a[k]=b[k]}\\
+    \justification{Def's of $J$ and substitution} 
+    & J\subst 0i
+  \end{align*}
+  
+  
+  \subsection{Fifth implication: $J\And i\geq n\Implies\All{k\in 0..(n-1)}{a[a_0[k]]=k}$}
+  \label{sec:fifth-impl-assnj}
+  
+  \begin{align*}
+    & J\And i\geq n\\
+    \justification{Def.~of $J$}
+    & I\subst{a_0,n}{a,i}\And 0\leq i \leq n\And \All{k\in 0..(i-1)}{a[k]=b[k]}\And i\geq n\\
+    \justification{Def.~of $I$ and substitution}
+    & \perm(a_0,n)\And 0\leq n \leq n \And a_0 = a_0\And \All{k\in 0..(n-1)}{b[a_0[k]]=k}\And{}\\
+    & 0\leq i \leq n\And \All{k\in 0..(i-1)}{a[k]=b[k]}\And i\geq n\\
+  %
+    \justification[\Implies]{simplify}
+    & \perm(a_0,n)\And 0\leq n \leq n \And a_0 = a_0\And \All{k\in 0..(n-1)}{b[a_0[k]]=k}\And{}\\
+    & \All{k\in 0..(n-1)}{a[k]=b[k]}\\
+    %
+    \justification[\Implies]{by the second line, ``$a = b$'', we use the last conjunct of the first to obtain}
+    & \All{k\in 0..(n-1)}{a[a_0[k]]=k}  
+  \end{align*}
+  
+  \section{Task 3}
+  \label{sec:task-3}
+  
+  % for assignment 1 (17s1), you don't implement barf - it's provided
+  \lstinputlisting{ip.c}
+  
+  \remark{Should discuss here the differences between the toy language
+    code and the C code, including:}
+  
+  In our C implementation, we opted for the more traditional
+  \lstinline{for} loop idiom instead of a \lstinline{while} loop. It
+  should be clear that our \lstinline{for} loop captures the meaning of
+  the entire first half of the toy language program. As for the second
+  half, we used a call of the C library function \lstinline{memcpy} to
+  implement the second loop (pseudo-code ``$a\Ass b$'') that copies the
+  content of array $b$ into array $a$. (Cf.~\lstinline{man memcpy}.)
+  \end{document}
