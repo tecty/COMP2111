@@ -178,30 +178,62 @@ Since we have define some manipulation of String, we can see a
 string as a whole. So the input is an array of String. Hence we can define 
 our precondiction as:
 \begin{gather*}
-    a\in String^*\And\length{a} = n
+    a,b\in String^*\And\length{a} = n
 \end{gather*}
 As the post condition as:
 \begin{gather*}
-    a,b \in String^* \And \length{b} \leq \length{a} \And \All{i\in 1..(\length{a}-1), a[i]\neq a[i+1],a[i-1] \neq a[i]\\}
-    {\Exi{j \in 1..(\length{b}-1)}{a[i-1]= b[j-1], a[i]= b[j], a[i+1]= b[j+1], i\geq j}}\\
-    \And \All {j \in 1..length(b)}{b[j]\neq b[j-1] \And b[j-1]\neq b[j+1]}
+    \All {i < n}{a[i] = b[m(i)]}
 \end{gather*}
-The postcondition mainly say all the adjust line is not the same string in array a , then 
-the b array will contain those identical adjust three line and all the adjust line in the array b is not equal.
-Hence the post condition is not
-friendly there is a refinement for this postcondition that would be use in programme this uniq.\\
-\subsection{Refinement of the postcondition }
-By having this observation( proof)
-\begin{align*}
-    &b \in String^* \And j \in 0..(\length{b}-1) \All b[j] \neq b[j+1] \\
-    \justification{sss}
-\end{align*}
-we can refine the post condition to this easier one. 
-\begin{align*}
-    &LOL
-\end{align*}
+Where m is a mapping function, define as follow:
+\begin{gather*}
+    sss
+\end{gather*}
 
 \section{Task 2}
+We propose the following proof outline to demonstrate the correctness
+of our code (in black).
+\begin{gather}
+    \assn{a,b\in String^*\And\length{a} = n}\\
+    \assn{I\subst{0}{i}\subst{0}{j}}\\
+    i\Ass 0;j\Ass 0;\\
+    \assn{J}\\
+    \IF~ \length{a} >0 ~ \THEN\\
+    \qquad \assn{J \And \length{a} > 0}\\
+    \qquad \assn{I \subst{1}{j} \subst{1}{i} \subst{b:0 \mapsto a[0]}{b}}\\
+    \qquad b[0] \Ass a[0];\\
+    \qquad \assn{I\subst{0}{i}\subst{0}{j}}\\
+    \qquad i=1;j=1;\\
+    \FI\\
+% 
+% 
+    \assn{I}\\
+    \WHILE~i<\length{a}~\DO\\
+    \qquad \assn{I \And i < \length{a}}\\
+    \qquad \assn{K }\\
+    \qquad \IF~a[i] \neq a[i+1]~ \THEN\\
+    \qquad \qquad \assn{K \And a[i]\neq a[i+1]}\\
+    \qquad \qquad \assn{I \subst{i+1}{i} \subst{j+1}{j} \subst{b:j\mapsto a[i]}{b}}\\
+    \qquad \qquad b[j] \Ass a[i];\\
+    \qquad \qquad \assn{I \subst{i+1}{i} \subst{j+1}{j} }\\
+    \qquad \qquad j \Ass j +1;\\
+    \qquad \qquad \assn{I \subst{i+1}{i}}\\
+    \qquad \FI\\
+    \qquad \assn{I \subst{i+1}{i}}\\
+    \qquad i \Ass i +1 \\
+    \qquad \assn{I}\\
+    \OD\\
+% 
+    \assn{I \And i \geq \length{a}}\\
+    \assn{postcondition}
+\end{gather}
+Here are the invariants of this programme:
+\begin{gather*}
+\end{gather*}
+% work should continue here
+\subsection{First Implication: $a,b\in String^*\And\length{a} = n \Implies I\subst{0}{i}\subst{0}{j}$}
+\subsection{Second Implication: $I \And i < (\length{a}-1) \Implies J$}
+\subsection{Third Implication: }
+\subsection{Forth Implication: }
 \section{Task 3}
 \section{Task 4}
 
