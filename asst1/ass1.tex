@@ -76,6 +76,12 @@ Similarly, we write:
 \begin{gather*}
     a \neq b \iff \neg (a = b) 
 \end{gather*}
+% a programe to write whether the string is equal to another string.
+\subsection*{Comparing String}
+After defining what is string equal, we need a pieces programme in toy language to 
+do the dirty work which could compare two strings.
+% A programme should be written to compare string
+
 \subsection*{String Assign}
 To assign a string to another string array, we will denote as 
 \begin{gather*}
@@ -168,25 +174,28 @@ We then have a clear imply
     & a,b \in String \And a = b
 \end{align*}
 
-% a programe to write whether the string is equal to another string.
-\subsection*{String Compare}
-Missing part
 
 
 \section{Task 1}
 Since we have define some manipulation of String, we can see a 
-string as a whole. So the input is an array of String. Hence we can define 
-our precondiction as:
+string as a whole. So the input is an array of String. Also ,
+the ouput is store in $b$ which is an empty array (type is $String*$ too 
+). Hence we can define our precondiction as:
 \begin{gather*}
     a,b\in String^*\And\length{a} = n
 \end{gather*}
 As the post condition as:
 \begin{gather*}
-    \All {i < n}{a[i] = b[m(i)]}
+    \All {i < n}{a[i] = b[m(a,i)]}
 \end{gather*}
-Where m is a mapping function, define as follow:
+Where m is a mapping function define recursively as follow:
 \begin{gather*}
-    sss
+    m(a,i) = 
+    \begin{cases}
+        0         & \text{if } i=0\\
+        m(i-1)    & \text{if } a[i] = a[i-1]\\
+        m(i-1) +1 & \text{if } a[i] \neq a[i-1]
+    \end{cases}
 \end{gather*}
 
 \section{Task 2}
@@ -194,29 +203,34 @@ We propose the following proof outline to demonstrate the correctness
 of our code (in black).
 \begin{gather}
     \assn{a,b\in String^*\And\length{a} = n}\\
-    \assn{I\subst{0}{i}\subst{0}{j}}\\
-    i\Ass 0;j\Ass 0;\\
     \assn{J}\\
     \IF~ \length{a} >0 ~ \THEN\\
     \qquad \assn{J \And \length{a} > 0}\\
     \qquad \assn{I \subst{1}{j} \subst{1}{i} \subst{b:0 \mapsto a[0]}{b}}\\
     \qquad b[0] \Ass a[0];\\
-    \qquad \assn{I\subst{0}{i}\subst{0}{j}}\\
+    \qquad \assn{I \subst{1}{j} \subst{1}{i}  }\\
     \qquad i=1;j=1;\\
+    \qquad \assn{I}\\
+    \ELSE\\ 
+    \qquad \assn{J \And \length{a} \leq 0}\\
+    \qquad \assn{I\subst{0}{i}\subst{0}{j}}\\
+    \qquad i\Ass 0;j\Ass 0;\\
+    \qquad \assn{I}\\
     \FI\\
-% 
 % 
     \assn{I}\\
     \WHILE~i<\length{a}~\DO\\
     \qquad \assn{I \And i < \length{a}}\\
     \qquad \assn{K }\\
-    \qquad \IF~a[i] \neq a[i+1]~ \THEN\\
-    \qquad \qquad \assn{K \And a[i]\neq a[i+1]}\\
+    \qquad \IF~a[i] \neq a[i-1]~ \THEN\\
+    \qquad \qquad \assn{K \And a[i]\neq a[i-1]}\\
     \qquad \qquad \assn{I \subst{i+1}{i} \subst{j+1}{j} \subst{b:j\mapsto a[i]}{b}}\\
     \qquad \qquad b[j] \Ass a[i];\\
     \qquad \qquad \assn{I \subst{i+1}{i} \subst{j+1}{j} }\\
     \qquad \qquad j \Ass j +1;\\
     \qquad \qquad \assn{I \subst{i+1}{i}}\\
+    \qquad \ELSE\\
+    \qquad \qquad skip \\
     \qquad \FI\\
     \qquad \assn{I \subst{i+1}{i}}\\
     \qquad i \Ass i +1 \\
@@ -224,16 +238,79 @@ of our code (in black).
     \OD\\
 % 
     \assn{I \And i \geq \length{a}}\\
-    \assn{postcondition}
+    \assn{\All {i < n}{a[i] = b[m(a,i)]}}
 \end{gather}
-Here are the invariants of this programme:
+Here are the invariants of this programme
+\footnote{The invariant is following the case study in week 8, might not be true for the
+ stuff we study for now. But I have to use this tool otherwise I couldn't countinue 
+ this proof}:
 \begin{gather*}
+    I = a,b\in String^*\And\length{a} = n \And 
+    0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]} \\
+    J = 
+    \left(\begin{array}[c]{l}
+        \length{a}>0 \Implies I \subst{1}{j} \subst{1}{i} \subst{b:0 \mapsto a[0]}{b}\\
+        \length{a}\leq 0 \Implies I \subst{0}{j} \subst{0}{i}
+    \end{array}\right)\\
+    K = 
+    \left(\begin{array}[c]{l}
+        a[i] \neq a[i-1] \Implies I \subst{i+1}{i} \subst{j+1}{j} \subst{b:j\mapsto a[i]}{b}\\
+        a[i] =    a[i-1] \Implies I \subst{i+1}{i}
+    \end{array}\right)
 \end{gather*}
 % work should continue here
-\subsection{First Implication: $a,b\in String^*\And\length{a} = n \Implies I\subst{0}{i}\subst{0}{j}$}
-\subsection{Second Implication: $I \And i < (\length{a}-1) \Implies J$}
-\subsection{Third Implication: }
-\subsection{Forth Implication: }
+\subsection{First Implication: $a,b\in String^*\And\length{a} = n \Implies J$}
+\begin{align*}
+    &a,b\in String^*\And\length{a} = n\\
+    \justification[\Implies]{$n \in \nat$, substitution of $i,j$ }
+    &\left(\begin{array}[c]{l}
+        \length{a}>0 \Implies a,b\in String^*\And\length{a} = n \And 
+        0 \leq 1 \leq \length{a} \And \All{k \in 0..(1-1)}{ a[k] = b[m(a,k)]}\\
+    % another part of I 
+        \length{a} = 0 \Implies a,b\in String^*\And\length{a} = n \And 
+        0 \leq 0 \leq \length{a} \And \All{k \in 0..(0-1)}{ a[k] = b[m(a,k)]}
+    \end{array}\right)\\
+    \justification[\Implies]{Substitution of I }
+    &\left(\begin{array}[c]{l}
+        \length{a}>0 \Implies I \subst{1}{j} \subst{1}{i} \subst{b:0 \mapsto a[0]}{b}\\
+        \length{a}\leq 0 \Implies I \subst{0}{j} \subst{0}{i}
+    \end{array}\right)\\
+    \justification{Definition of J} 
+    &J
+\end{align*}
+\subsection{Second Implication: $I \And i < \length{a} \Implies K$}
+\begin{align*}
+    & I \And i < \length{a} \\
+    \justification{Definition of $I$}
+    & a,b\in String^*\And\length{a} = n \And 
+    0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]} \And i < \length{a} \\
+    \justification[\Implies]{Substitue $i+1$ and $j+1$ and $K$}
+    &\left(\begin{array}[c]{l}
+        a[i] \neq a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
+        0 \leq i+1 \leq \length{a}+1 \And \All{k \in 0..(i)}{ a[k] = b[m(a,k)]} \And i < \length{a}\\
+        a[i] =    a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
+        0 \leq i+1 \leq \length{a}+1 \And \All{k \in 0..(i)}{ a[k] = b[m(a,k)]} \And i < \length{a}
+    \end{array}\right)\\
+    \justification[\Implies]{Conjunct the $i<\length{a}$}
+    &\left(\begin{array}[c]{l}
+        a[i] \neq a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
+        0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i)}{ a[k] = b[m(a,k)]}\\
+        a[i] =    a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
+        0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i)}{ a[k] = b[m(a,k)]}
+    \end{array}\right)\\
+    \justification{}
+    &\left(\begin{array}[c]{l}
+        a[i] \neq a[i-1] \Implies I \subst{i+1}{i} \subst{j+1}{j} \subst{b:j\mapsto a[i]}{b}\\
+        a[i] =    a[i-1] \Implies I \subst{i+1}{i}
+    \end{array}\right)\\
+    \justification{}
+    &\left(\begin{array}[c]{l}
+        a[i] \neq a[i-1] \Implies I \subst{i+1}{i} \subst{j+1}{j} \subst{b:j\mapsto a[i]}{b}\\
+        a[i] =    a[i-1] \Implies I \subst{i+1}{i}
+    \end{array}\right)\\
+    \justification{Definition of K}
+    & K
+\end{align*}
 \section{Task 3}
 \section{Task 4}
 
