@@ -284,26 +284,32 @@ Here are the invariants of this programme
     \justification{Definition of $I$}
     & a,b\in String^*\And\length{a} = n \And 
     0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]} \And i < \length{a} \\
-    \justification[\Implies]{Substitue $i+1$ and $j+1$ and $K$}
+    \justification[\Implies]{$m(a,i)$ need to consider two situation of $a[i]$ ($a[i] = a[i-1]$ and $a[i]\neq a[i-1]$)}
     &\left(\begin{array}[c]{l}
         a[i] \neq a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
-        0 \leq i+1 \leq \length{a}+1 \And \All{k \in 0..(i)}{ a[k] = b[m(a,k)]} \And i < \length{a}\\
+        0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]}\\
+        \And a[i] = b [j-1]\\
         a[i] =    a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
-        0 \leq i+1 \leq \length{a}+1 \And \All{k \in 0..(i)}{ a[k] = b[m(a,k)]} \And i < \length{a}
+        0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]}\\
+        \And a[i] = b [j]\\
     \end{array}\right)\\
-    \justification[\Implies]{Conjunct the $i<\length{a}$}
+    \justification{By the recursively definition of $m(a,i)$}
+    &\left(\begin{array}[c]{l}
+        a[i] \neq a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
+        0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]}\\
+        \And a[i] = b [m(a,i)]\\
+        a[i] =    a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
+        0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]}\\
+        \And a[i] = b [m(a,i)]\\
+    \end{array}\right)\\
+    \justification{Merge two cases of $k$ ($k = i$ and $k \in 0.. (i-1)$) .}
     &\left(\begin{array}[c]{l}
         a[i] \neq a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
         0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i)}{ a[k] = b[m(a,k)]}\\
         a[i] =    a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
         0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i)}{ a[k] = b[m(a,k)]}
     \end{array}\right)\\
-    \justification{}
-    &\left(\begin{array}[c]{l}
-        a[i] \neq a[i-1] \Implies I \subst{i+1}{i} \subst{j+1}{j} \subst{b:j\mapsto a[i]}{b}\\
-        a[i] =    a[i-1] \Implies I \subst{i+1}{i}
-    \end{array}\right)\\
-    \justification{}
+    \justification{Substitue back by definition of I.}
     &\left(\begin{array}[c]{l}
         a[i] \neq a[i-1] \Implies I \subst{i+1}{i} \subst{j+1}{j} \subst{b:j\mapsto a[i]}{b}\\
         a[i] =    a[i-1] \Implies I \subst{i+1}{i}
@@ -311,6 +317,8 @@ Here are the invariants of this programme
     \justification{Definition of K}
     & K
 \end{align*}
+The meaning of "By the recursively definition of $m(a,i)$" is when $a[i] = a[i-1]$, a[i] = $b[m(a,i-1)]$,
+ which $m(a, i-1) = j-1$ since $j= \length{b}$. 
 \section{Task 3}
 \section{Task 4}
 
