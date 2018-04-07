@@ -317,8 +317,9 @@ Here are the invariants of this programme
     \justification{Definition of K}
     & K
 \end{align*}
-The meaning of "By the recursively definition of $m(a,i)$" is when $a[i] = a[i-1]$, a[i] = $b[m(a,i-1)]$,
- which $m(a, i-1) = j-1$ since $j= \length{b}$. 
+The meaning of "By the recursively definition of $m(a,i)$" is when $a[i] = a[i-1]$, $a[i] = b[m(a,i)]= b[m(a,i-1)]$,
+ which $m(a, i-1) = j-1$ since $j= \length{b}$. In another case, $a[i] \neq a[i-1]$,
+ $b[j]= a[i]$ (where $\length{b}= j+1$)
 \section{Task 3}
 \section{Task 4}
 
