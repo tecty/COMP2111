@@ -186,7 +186,7 @@ the ouput is store in $b$ which is an empty array (type is $String*$ too
 \end{gather*}
 As the post condition as:
 \begin{gather*}
-    \All {i < n}{a[i] = b[m(a,i)]}
+    a,b\in String \And\All {i < n}{a[i] = b[m(a,i)]}
 \end{gather*}
 Where m is a mapping function define recursively as follow:
 \begin{gather*}
@@ -238,7 +238,7 @@ of our code (in black).
     \OD\\
 % 
     \assn{I \And i \geq \length{a}}\\
-    \assn{\All {i < n}{a[i] = b[m(a,i)]}}
+    \assn{a,b\in String \And \All {i < n}{a[i] = b[m(a,i)]}}
 \end{gather}
 Here are the invariants of this programme
 \footnote{The invariant is following the case study in week 8, might not be true for the
@@ -316,10 +316,25 @@ Here are the invariants of this programme
     \end{array}\right)\\
     \justification{Definition of K}
     & K
-\end{align*}
+ \end{align*}
 The meaning of "By the recursively definition of $m(a,i)$" is when $a[i] = a[i-1]$, $a[i] = b[m(a,i)]= b[m(a,i-1)]$,
  which $m(a, i-1) = j-1$ since $j= \length{b}$. In another case, $a[i] \neq a[i-1]$,
  $b[j]= a[i]$ (where $\length{b}= j+1$)
+\subsection{Third Implication: $I \And i \geq \length{a}\Implies a,b\in String \And\All {i < n}{a[i] = b[m(a,i)]}$}
+\begin{align*}
+    &I \And i \geq \length{a}\\
+    \justification{Definations of I}
+    &a,b\in String^*\And\length{a} = n \And 
+    0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]} 
+    \And i \geq \length{a}\\
+    \justification{$i \leq \length{a}  \And i \geq \length{a} \Equiv i = \length{{a}} $}
+    &a,b\in String^*\And\length{a} = n \And 
+    \All{k \in 0..(\length{a}-1)}{ a[k] = b[m(a,k)]} \\
+    \justification[\Implies]{$\length{a}= n$ and $i \in \nat$}
+    &a,b\in String^* \And \All{i \in 0..(n-1)}{ a[i] = b[m(a,i)]}\\
+    \justification{Defination of post condition.}
+    &a,b\in String \And\All {i < n}{a[i] = b[m(a,i)]}\\
+\end{align*}
 \section{Task 3}
 \section{Task 4}
 
