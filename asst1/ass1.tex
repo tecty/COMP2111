@@ -139,6 +139,8 @@ Similarly, we write:
     a \neq b \iff \neg (a = b) 
 \end{gather*}
 % a programe to write whether the string is equal to another string.
+% * str_cmp
+% 
 \subsection*{Comparing String}
 After defining what is string equal, we need a pieces programme in toy language to 
 do the dirty work which could compare two strings. Also we need a flag variable to 
@@ -154,13 +156,12 @@ store the truth value of $a= b$
 \subsubsection*{Programme}
 \begin{gather*}
     \assn{a,b \in String}\\
-    \assn{I\subst{\True}{flag}}\\
+    \assn{I\subst{\True}{flag}\subst{0}{i}}\\
+    i\Ass 0;\\
     flag \Ass 1;\\
     \assn{I}\\
     \IF ~\length{a} = \length{b}~\THEN\\
     \qquad \assn{I \And \length{a}= \length{b}}\\
-    \qquad \assn{J \And \subst{0}{i}}\\
-    \qquad i\Ass 0;\\
     \qquad \assn{J}\\
     \qquad \WHILE~i \leq \length{a} ~ \DO\\
     \qquad \qquad \assn{J \And i \leq \length{a}}\\
@@ -170,10 +171,12 @@ store the truth value of $a= b$
     \qquad \qquad \qquad skip \\
     \qquad \qquad \ELSE \\
     \qquad \qquad \qquad \assn{K \And a[i]\neq b[i]}\\
-    \qquad \qquad \qquad \assn{J \subst{\False}{flag}}\\
+    \qquad \qquad \qquad \assn{J \subst{\False}{flag}\subst{i+1}{i}}\\
     \qquad \qquad \qquad flag \Ass 0;\\
-    \qquad \qquad \qquad \assn{J}\\
+    \qquad \qquad \qquad \assn{J\subst{i+1}{i}}\\
     \qquad \qquad \FI \\
+    \qquad \qquad \assn{J \subst{i+1}{i}}\\
+    \qquad \qquad i \Ass i+1 ;\\
     \qquad \qquad \assn{J}\\
     \qquad \OD\\
     \qquad \assn{J \And i > \length{a}}\\
@@ -195,13 +198,75 @@ Where \True = 1 , \False = 0, and
     \And \All{k \in 0..(i-1) }{a[i] = b[i]})\\
     K =
     \left(\begin{array}[c]{l}
-        a[i] \neq b[i] \Implies I \subst{\False}{flag}\\
-        a[i] =    b[i] \Implies I 
+        a[i] \neq b[i] \Implies I \subst{\False}{flag}\subst{i+1}{i}\\
+        a[i] =    b[i] \Implies I \subst{i+1}{i}
     \end{array}\right)
 \end{gather*}
 
-\subsubsection*{First Implication:}
-
+\subsubsection*{First Implication:$a,b \in String \Implies I\subst{\True}{flag}\subst{0}{i}$}
+\begin{align*}
+    &a,b \in String \\
+    \justification[\Implies]{The append junction is alway true.}
+    &a,b \in String \And \length{a}= \length{b} \And 0 \leq i \leq 0
+    \And \All{k \in 0..(i-1) }{a[i] = b[i]}\\
+    \justification[\Implies]{$flag = \True$ and $\True = \True$}
+    &a,b \in String \And flag = (\length{a}= \length{b} \And 0 \leq i \leq 0
+    \And \All{k \in 0..(i-1) }{a[i] = b[i]})\\
+    \justification{Defination of I.}
+    &I\subst{\True}{flag}
+\end{align*}
+\subsubsection*{Second Implication:$I \And \length{a}= \length{b} 
+    \Implies J \And \subst{0}{i}$}
+\begin{align*}
+    &I \And \length{a}= \length{b} \\
+    \justification[\Implies]{Definiation of I. $i=0$ when right junction is always true.}
+    &a,b \in String \And flag = ( \length{a}= \length{b} \And 0 \leq 0 \leq (\length{a}+1)\\
+    &\And \All{k \in 0..(i-1) }{a[i] = b[i]})\\
+    \justification[\Implies]{Definition of J.}
+    &J \And \subst{0}{i}
+\end{align*}
+\subsubsection*{Third Implication:$J \And i \leq \length{a} \Implies K$}
+\begin{align*}
+    &J \And i \leq \length{a} \\
+    \justification{Definition of J}
+    &a,b \in String \And flag = (0 \leq i \leq (\length{a}+1)
+    \And \All{k \in 0..(i-1) }{a[i] = b[i]}) \And i \leq \length{a} \\
+    \justification[\Implies]{By definition of two string is equal, two case to consider. }
+    &\left(\begin{array}[c]{l}
+        a[i] \neq b[i] \Implies a,b \in String \And flag = \False\\
+        a[i] =    b[i] \Implies a,b \in String \And flag = ( \length{a}= \length{b} \\
+        \And 0 \leq i+1 \leq (\length{a}+2)\And \All{k \in 0..i }{a[i+1] = b[i+1]})\And i \leq \length{a}
+    \end{array}\right)\\
+    \justification[\Implies]{By definition of two string is equal, two case to consider. }
+    &\left(\begin{array}[c]{l}
+        a[i] \neq b[i] \Implies a,b \in String \And flag = \False\\
+        a[i] =    b[i] \Implies a,b \in String \And flag = ( \length{a}= \length{b} \\
+        \And 0 \leq i+1 \leq (\length{a}+1)\And \All{k \in 0..i }{a[i+1] = b[i+1]})
+    \end{array}\right)\\
+    \justification{Definition of $I$}
+    &\left(\begin{array}[c]{l}
+        a[i] \neq b[i] \Implies I \subst{\False}{flag}\subst{i+1}{i}\\
+        a[i] =    b[i] \Implies I \subst{i+1}{i}
+    \end{array}\right)\\
+    \justification{Defination of $K$}
+    &K
+\end{align*}
+\subsubsection*{Forth Implication: $I \And \length{a} \neq \length{b} \Implies I \subst{\False}{flag}  $}
+\begin{align*}
+    &I \And \length{a} \neq \length{b}\\
+    \justification[\Implies]{Definition of two string is not equal.}
+    &I \And \length{a} \neq \length{b} \And a \neq b\\
+    \justification[\Implies]{$flag = \False$ and $\False = \False$}
+    & a,b \in String \And flag = (a=b) \And a \neq b \\
+    \justification{Definition of I.}
+    &I \subst{\False}{flag} 
+\end{align*}
+\subsubsection*{Fifth Implication: $I \Implies flag = (a=b)$}
+\begin{align*}
+    &I\\
+    \justification{Defination of the purpose of $flag$}
+    & flag = (a=b)
+\end{align*}
 
 \subsection*{String Assign}
 To assign a string to another string array, we will denote as 
