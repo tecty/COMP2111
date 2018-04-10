@@ -20,10 +20,11 @@ unsigned int uniq(unsigned int n, char *a[], char *b[]){
         i = j=0;
     }
     while(i<n){
-        aLength =bLength = 0;
+        aLength =0;
         while(a[i][aLength]!='\0'){
             aLength = aLength+1;
         }
+        bLength = 0;
         while(a[i-1][bLength]!='\0'){
             bLength = bLength+1;
         }

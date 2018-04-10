@@ -563,7 +563,7 @@ Where m is a mapping function define recursively as follow:
 \end{gather*}
 \subsection{Toy Language Programme}
 \begin{gather}
-    \assn{a,b\in String^*\And\length{a} = n}
+    \assn{a,b\in String^*\And\length{a} = n}\\
     \assn{I}\\
     \IF~\length{a}>0~\THEN\\
     \qquad \assn{I \And \length{a}>0}\\
@@ -602,12 +602,67 @@ Where m is a mapping function define recursively as follow:
     \qquad \assn{L}\\
     \FI\\
     \assn{L}\\
+    \WHILE ~i < \length{a}~\DO \\
+    \qquad \assn{L \And i < \length{a}}\\
+    \qquad \assn{M \subst{0}{aLength}}\\
+    \qquad aLength \Ass 0;\\
+    \qquad \assn{M} \\
+    \qquad \WHILE ~a[i][aLength]\neq '\backslash0'~\DO \\
+    \qquad\qquad \assn{M \And a[i][aLength]\neq '\backslash0'}\\
+    \qquad \qquad \assn{M \subst {aLength+1}{aLength}}\\
+    \qquad \qquad aLength = aLength +1;\\
+    \qquad \qquad \assn{M}\\
+    \qquad \OD \\
+    \qquad \assn{N \And a[i-1][bLength]=  '\backslash0'} \displaybreak\\
+    \qquad \assn{N \subst{0}{bLength}}\\
+    \qquad bLength \Ass 0;\\
+    \qquad \assn{N} \\
+    \qquad \WHILE ~a[i-1][bLength]\neq '\backslash0'~\DO \\
+    \qquad\qquad \assn{N \And a[i-1][bLength]\neq '\backslash0'}\\
+    \qquad \qquad \assn{N \subst {bLength+1}{bLength}}\\
+    \qquad \qquad bLength = bLength +1;\\
+    \qquad \qquad \assn{N}\\
+    \qquad \OD \\
+    \qquad \assn{N \And a[i-1][bLength]=  '\backslash0'} \\
+    % strcmp (a[i], a[i-1])*
+    \qquad \assn{O}\\
+    \qquad \IF ~aLength = bLength~ \THEN\\
+    \qquad \qquad \assn{O \And aLength = bLength}\\
+    \qquad \qquad \assn{P \subst{0}{k} }\\
+    \qquad \qquad k \Ass 0;\\
+    \qquad \qquad \assn{P }\\
+    \qquad \qquad \WHILE ~k \leq aLength ~ \DO\\
+    \qquad \qquad \qquad \assn{P \And k \leq aLength}\\
+    \qquad \qquad \qquad \assn{Q}\\
+    \qquad \qquad \qquad \IF ~a[i][k] \neq a[i-1][k]~ \THEN \\
+    \qquad \qquad \qquad \qquad \assn{Q \And a[i][k] \neq a[i-1][k]}\\
+    \qquad \qquad \qquad \qquad \assn{P \subst{k+1}{k} \subst{\False}{flag}}\\
+    \qquad \qquad \qquad \qquad flag \Ass 0;\\
+    \qquad \qquad \qquad \qquad \assn{P \subst{k+1}{k}}\\
+    \qquad \qquad \qquad \ELSE\\
+    \qquad \qquad \qquad \qquad \assn{P \subst{k+1}{k}}\\
+    \qquad \qquad \qquad \qquad skip \\
+    \qquad \qquad \qquad \FI\\
+    \qquad \qquad \qquad \assn{P \subst{k+1}{k}}\\
+    \qquad \qquad \qquad k \Ass k+1;\\
+    \qquad \qquad \qquad \assn{P}\\
+    \qquad \qquad \OD\\
+    \qquad \qquad \assn{P}\\
+    \qquad \qquad \assn{O}\displaybreak\\
+    \qquad \THEN \\
+    \qquad \qquad \assn{O \And aLength\neq bLength }\\ 
+    \qquad \qquad \assn{O \subst{\False}{flag}}\\
+    \qquad \qquad flag \Ass 0;\\
+    \qquad \qquad \assn{O}\\
+    \qquad \FI\\ 
+    \qquad \assn{O}\\
+    \qquad \assn{L}\\
+    \OD \\
+    \assn{L \And i \geq \length{a}}\\
     \assn{a,b\in String \And\All {i < n}{a[i] = b[m(a,i)]}}
 \end{gather}
 \subsection{Programme in C}
 \lstinputlisting{uniq.c}
 \section{Task 4}
-
-
 
 \end{document}
