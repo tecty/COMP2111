@@ -434,7 +434,7 @@ Here are the invariants of this programme
 \begin{gather*}
     I = a,b\in String^*\And\length{a} = n \And 
     0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]}\\
-    \And j = \length{b} = m(a,i-1)+1\\
+    \And j = m(a,i-1)+1\\
     J = 
     \left(\begin{array}[c]{l}
         \length{a}>0 \Implies I \subst{1}{j} \subst{1}{i} \subst{b:0 \mapsto a[0]}{b}\\
@@ -454,11 +454,21 @@ Here are the invariants of this programme
     &\left(\begin{array}[c]{l}
         \length{a}>0 \Implies a,b\in String^*\And\length{a} = n \And 
         0 \leq 1 \leq \length{a} \And \\
-        \All{k \in 0..(1-1)}{ a[k] = b[m(a,k)]}  \And j = \length{b} = m(a,i-1)+1\\
+        \All{k \in 0..(1-1)}{ a[k] = b[m(a,k)]}  \And j = 1\And m(a,0)+1 =1\\
     % another part of I 
         \length{a} = 0 \Implies a,b\in String^*\And\length{a} = n \And 
         0 \leq 0 \leq \length{a} \And \\
-        \All{k \in 0..(0-1)}{ a[k] = b[m(a,k)]}  \And j = \length{b} = m(a,i-1)+1
+        \All{k \in 0..(0-1)}{ a[k] = b[m(a,k)]}  \And j = 0\And m(a,-1)+1 =0
+    \end{array}\right)\\
+    \justification[\Implies]{The number is same.}
+    &\left(\begin{array}[c]{l}
+        \length{a}>0 \Implies a,b\in String^*\And\length{a} = n \And 
+        0 \leq 1 \leq \length{a} \And \\
+        \All{k \in 0..(1-1)}{ a[k] = b[m(a,k)]}  \And j = m(a,0)+1 \\
+    % another part of I 
+        \length{a} = 0 \Implies a,b\in String^*\And\length{a} = n \And 
+        0 \leq 0 \leq \length{a} \And \\
+        \All{k \in 0..(0-1)}{ a[k] = b[m(a,k)]}  \And j = m(a,-1)+1 
     \end{array}\right)\\
     \justification[\Implies]{Substitution of I }
     &\left(\begin{array}[c]{l}
@@ -473,15 +483,16 @@ Here are the invariants of this programme
     & I \And i < \length{a} \\
     \justification{Definition of $I$}
     & a,b\in String^*\And\length{a} = n \And 
-    0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]} \And i < \length{a} \\
+    0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]}\\
+    &\And j = m(a,i-1)+1 \And i < \length{a}\\
     \justification[\Implies]{$m(a,i)$ need to consider two situation of $a[i]$ ($a[i] = a[i-1]$ and $a[i]\neq a[i-1]$)}
     &\left(\begin{array}[c]{l}
         a[i] \neq a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
         0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]}\\
-        \And a[i] = b [j]\\
+        \And a[i] = b [j]\And j = m(a,(i+1)-1)+1\\
         a[i] =    a[i-1] \Implies a,b\in String^*\And\length{a} = n \And \\
         0 \leq i+1 \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]}\\
-        \And a[i] = b [j-1]\\
+        \And a[i] = b [j-1]\And j = m(a,(i+1)-1)+1\\
     \end{array}\right)\\
     \justification{By the recursively definition of $m(a,i)$}
     &\left(\begin{array}[c]{l}
@@ -515,17 +526,85 @@ The meaning of "By the recursively definition of $m(a,i)$" is when $a[i] = a[i-1
     &I \And i \geq \length{a}\\
     \justification{Definations of I}
     &a,b\in String^*\And\length{a} = n \And 
-    0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]} 
-    \And i \geq \length{a}\\
+    0 \leq i \leq \length{a} \And \All{k \in 0..(i-1)}{ a[k] = b[m(a,k)]} \\
+    &\And j = m(a,i-1)+1 \And i \geq \length{a}\\
     \justification{$i \leq \length{a}  \And i \geq \length{a} \Equiv i = \length{{a}} $}
     &a,b\in String^*\And\length{a} = n \And 
-    \All{k \in 0..(\length{a}-1)}{ a[k] = b[m(a,k)]} \\
+    \All{k \in 0..(\length{a}-1)}{ a[k] = b[m(a,k)]} \And j = m(a,i-1)+1\\
     \justification[\Implies]{$\length{a}= n$ and $i \in \nat$}
     &a,b\in String^* \And \All{i \in 0..(n-1)}{ a[i] = b[m(a,i)]}\\
     \justification{Defination of post condition.}
     &a,b\in String \And\All {i < n}{a[i] = b[m(a,i)]}\\
 \end{align*}
 \section{Task 3}
+\subsection{Unsatisfied Programme}
+\lstinputlisting{uniqfun.c}
+By the building of this programme, we build a programme that meet the criteria of 
+our toy language. For the validity of this programme, we already have similar proof 
+given by this article, since we have proof the parts seperatly.
+\subsection{Satisfied Programme in Toy Language Style}
+\subsubsection{Precondiction}
+\begin{gather*}
+    a,b\in String^*\And\length{a} = n
+\end{gather*}
+\subsubsection{Postcondiction}
+\begin{gather*}
+    a,b\in String \And\All {i < n}{a[i] = b[m(a,i)]}
+\end{gather*}
+Where m is a mapping function define recursively as follow:
+\begin{gather*}
+    m(a,i) = 
+    \begin{cases}
+        -1          & \text{if } i<0\\
+        0           & \text{if } i=0\\
+        m(a,i-1)    & \text{if } a[i] = a[i-1]\\
+        m(a,i-1) +1 & \text{if } a[i] \neq a[i-1]
+    \end{cases}
+\end{gather*}
+\subsection{Toy Language Programme}
+\begin{gather}
+    \assn{a,b\in String^*\And\length{a} = n}
+    \assn{I}\\
+    \IF~\length{a}>0~\THEN\\
+    \qquad \assn{I \And \length{a}>0}\\
+    % strlen * 
+    \qquad \assn{J \subst{0}{aLength}}\\
+    \qquad aLength \Ass 0;\\
+    \qquad \assn{J}\\
+    \qquad \WHILE ~a[0][aLength] \neq '\backslash0'~ \DO\\
+    \qquad \qquad \assn{J\And a[0][aLength] \neq '\backslash0'}\\
+    \qquad \qquad \assn{J \subst{k+1}{k}}\\
+    \qquad \qquad k \Ass k+1\\
+    \qquad \qquad \assn{J}\\
+    \qquad \OD\displaybreak\\
+    \qquad \assn{J\And a[0][aLength] = '\backslash0'}\\
+    % strcpy * 
+    \qquad \assn{K \subst{0}{k}}\\
+    \qquad k \Ass 0;\\
+    \qquad \assn{K}\\
+    \qquad\WHILE ~k \leq \length{a[0]}~ \DO\\
+    \qquad \qquad \assn{K \And k \leq \length{a[0]}}\\
+    \qquad \qquad \assn{K\subst{k+1}{k} \subst{\whatever{b}{0}{k}{a[0][k]}}{b} }\\
+    \qquad \qquad b[0][k] \Ass a[0][k] \\
+    \qquad \qquad \assn{K\subst{k+1}{k}} \\
+    \qquad \qquad k \Ass k+1;\\
+    \qquad \qquad \assn{K}\\
+    \qquad \OD\\
+    \qquad \assn{K \And k > \length{a[0]}}\\
+    % append 1 to i and j 
+    \qquad \assn{L\subst{1}{i}\subst{1}{j}}\\
+    \qquad i\Ass 1;j\Ass 1;\\
+    \qquad \assn{L}\\
+    \ELSE\\
+    \qquad \assn{I \And \length{a} \leq 0}\\
+    \qquad \assn{L\subst{0}{i}\subst{0}{j}}\\
+    \qquad i\Ass 0;j\Ass 0;\\
+    \qquad \assn{L}\\
+    \FI\\
+    \assn{L}\\
+    \assn{a,b\in String \And\All {i < n}{a[i] = b[m(a,i)]}}
+\end{gather}
+\subsection{Programme in C}
 \lstinputlisting{uniq.c}
 \section{Task 4}
 
