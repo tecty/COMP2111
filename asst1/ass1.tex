@@ -656,13 +656,51 @@ Where m is a mapping function define recursively as follow:
     \qquad \qquad \assn{O}\\
     \qquad \FI\\ 
     \qquad \assn{O}\\
+    \qquad \assn{R}\\
+    \qquad \IF ~flag \neq \True~\THEN\\
+    \qquad \qquad \assn{R \And flag \neq \True}\\
+    % strcpy(b[j],a[i])
+    \qquad \qquad \assn{S \subst{0}{k}}\\
+    \qquad \qquad k\Ass 0;\\
+    \qquad \qquad \assn{S}\\
+    \qquad \qquad \WHILE ~k \leq aLength~ \DO\\ 
+    \qquad \qquad \qquad \assn{S \And k \leq aLength}\\
+    \qquad \qquad \qquad \assn{S \subst{k+1}{K} 
+        \subst{\whatever{b}{j}{j}{a[i][k]} }{b}}\\
+    \qquad \qquad \qquad b[j][k] = a[i][k];\\
+    \qquad \qquad \qquad k \Ass k+1;\\
+    \qquad \qquad \qquad \assn{S}\\
+    \qquad \qquad \OD\\
+    \qquad \qquad \assn{S \And k > aLength}\\
+    \qquad \qquad \assn{R \subst{j+1}{j}}\\
+    \qquad \qquad j \Ass j+1;\\
+    \qquad \qquad \assn{R}\\
+    \qquad \ELSE\\
+    \qquad \qquad \assn{R \And flag = \True}\\
+    \qquad \qquad skip \\
+    \qquad \FI\\
+    \qquad \assn{R}\\
+    \qquad \assn{L \subst{i+1}{i}}\\
+    \qquad i \Ass i+1;\\
     \qquad \assn{L}\\
     \OD \\
     \assn{L \And i \geq \length{a}}\\
     \assn{a,b\in String \And\All {i < n}{a[i] = b[m(a,i)]}}
 \end{gather}
+I won't give the complete proof of this programme, since all the seperatly part 
+and the correct model has been proofed in the previous section. If you can follow
+the proof by task 2, then this programme would be true.
 \subsection{Programme in C}
 \lstinputlisting{uniq.c}
 \section{Task 4}
-
+I use the divide and conquer methodology to proof this big programme. I proof the 
+string, String Compare, String Lenth, String Copy. And use all the proofed programme
+to build the final uniq programme. Since we can not use function call in our toy
+language, I have supplied a toy language style programme that intergrated all those 
+function in it. \\
+I am sure that my proof is not perfect, and skill of using LaTeX is not statisfy. 
+But I try my best on this Assignment. I feel exhausted by this assignment, and put 
+almost all my vacation on this stuff. And feel so unfair about we must do a lot of 
+work to complete the proof, but previous year just a piece of cake compare to this
+assignment. \\ 
 \end{document}
